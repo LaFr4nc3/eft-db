@@ -19,8 +19,20 @@
       :items-per-page="ammo.length"
       :search="search"
       hide-default-footer
+      dense
       class="elevation-1"
-    ></v-data-table>
+    >
+      <template v-slot:item.accuracy="{ item }">
+        <span :class="getTextColor(item.accuracy)">
+          {{ item.accuracy > 0 ? `+${item.accuracy}` : `${item.accuracy}` }}
+        </span>
+      </template>
+      <template v-slot:item.recoil="{ item }">
+        <span :class="getTextColor(item.recoil)">
+          {{ item.recoil > 0 ? `+${item.recoil}` : `${item.recoil}` }}
+        </span>
+      </template>
+    </v-data-table>
   </v-card>
 </template>
 
@@ -29,6 +41,11 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class Ammunition extends Vue {
+  getTextColor(x: number): string {
+    if (x > 0) return "green--text";
+    if (x < 0) return "red--text";
+    return "";
+  }
   search = "";
   headers = [
     { text: "弾薬", value: "ammo" },
@@ -43,7 +60,7 @@ export default class Ammunition extends Vue {
     { text: "貫通率", value: "penetrationChance" },
     { text: "跳弾率", value: "ricochetChance" },
     { text: "破砕率", value: "fragmentationChance" },
-    { text: "アーマー損傷率", value: "armorDamage" }
+    { text: "アーマーダメージ", value: "armorDamage" }
   ];
   ammo = [
     {
